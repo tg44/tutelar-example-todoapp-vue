@@ -87,42 +87,60 @@ const actions = {
       }, 1000);
     }
   },
-  // Login
-  loginBasic({ dispatch }, authData) {
+  login({dispatch}, res) {
+    localStorage.setItem("refreshToken", res.refreshToken);
+    localStorage.setItem("token", res.token);
+    dispatch("autoRefreshToken");
+    dispatch("loading");
+  },
+  // register basic
+  registerBasic({ dispatch }, authData) {
     return authClient
       .post("/basic/register", {
         username: authData.username,
         password: authData.password,
       })
       .then(res => {
-        localStorage.setItem("refreshToken", res.data.refreshToken);
-        localStorage.setItem("token", res.data.token);
-        dispatch("autoRefreshToken");
-        dispatch("loading");
-        dispatch("successMessageSnackbar", "loginSuccessMsg");
+        dispatch("login", res.data)
       })
       .catch(() => {
         dispatch("loading");
         dispatch("failMessageSnackbar", "loginFailMsg");
       });
   },
-  // Auto Login
+  loginBasic({ dispatch }, authData) {
+    return authClient
+      .post("/basic/login", {
+        username: authData.username,
+        password: authData.password,
+      })
+      .then(res => {
+        dispatch("login", res.data)
+      })
+      .catch(() => {
+        dispatch("loading");
+        dispatch("failMessageSnackbar", "loginFailMsg");
+      });
+  },
+  loginGithub() {
+    window.location.replace(process.env.VUE_APP_AUTH_URL + "/github/login");
+  },
+  // Auto Login at app start
   tryAutoLogin({ dispatch }) {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) {
-      router.replace("/login");
-      return;
+      return false;
     }
     const expirationDate = jwtDecode(refreshToken).exp;
     const now = moment().valueOf() / 1000;
     if (now >= expirationDate) {
       dispatch("logout");
-      router.replace("/login");
+      return false;
     } else {
       dispatch("autoRefreshToken");
+      return true;
     }
   },
-
   // Logout
   logout({ commit }) {
     commit("CLEAR_AUTH_DATA");

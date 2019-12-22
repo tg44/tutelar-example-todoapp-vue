@@ -1,63 +1,62 @@
 
-//TODO fix the names!
 //TODO fix the api after new container version
 const state = {
   items: [],
 };
 
 const mutations = {
-  LOAD (state, items) {
+  LOAD_TODO (state, items) {
     state.items.splice(0, state.items.length);
     state.items.push(...items);
   },
-  REMOVE (state, item) {
-    const index = this.items.indexOf(item);
+  REMOVE_TODO (state, item) {
+    const index = state.items.indexOf(item);
     if (index > -1) {
-      this.items.splice(index, 1);
+      state.items.splice(index, 1);
     }
   },
-  EDIT_TITLE (state, {item, title}) {
+  EDIT_TODO_TITLE (state, {item, title}) {
     item.title = title;
   },
-  EDIT_DONE (state, {item, done}) {
+  EDIT_TODO_DONE (state, {item, done}) {
     item.done = done;
   }
 };
 import Vue from 'vue'
 const actions = {
-  addNewItem({ dispatch }, item) {
+  addTodoItem({ dispatch }, item) {
     return Vue.axios.post("/api/todo", item)
       .then(() => {
-        dispatch("load")
+        dispatch("loadTodoList")
       }).catch(() => {
         dispatch("failMessageSnackbar", "addFailMsg");
       });
   },
-  load({ dispatch, commit }) {
+  loadTodoList({ dispatch, commit }) {
     return Vue.axios.get("/api/todo")
       .then(res => {
-        commit("LOAD", res.data.todos);
+        commit("LOAD_TODO", res.data.todos);
       }).catch(() => {
         dispatch("failMessageSnackbar", "loadFailMsg");
       });
   },
-  remove({ dispatch, commit }, item) {
-    return Vue.axios.delete(`/api/todo/${item.id}`).then(() => {
-      commit("REMOVE", item);
+  removeTodoItem({ dispatch, commit }, item) {
+    return Vue.axios.post(`/api/todo/${item.id}/delete`).then(() => {
+      commit("REMOVE_TODO", item);
     }).catch(() => {
       dispatch("failMessageSnackbar", "deleteFailMsg");
     });
   },
-  editTitle({ dispatch, commit }, {item, title}) {
+  editTodoTitle({ dispatch, commit }, {item, title}) {
     return Vue.axios.post(`/api/todo/${item.id}`, {title: title, done: item.done}).then(() => {
-      commit("EDIT_TITLE", {item, title});
+      commit("EDIT_TODO_TITLE", {item, title});
     }).catch(() => {
       dispatch("failMessageSnackbar", "editTitleFailMsg");
     });
   },
-  editDone({ dispatch, commit }, {item, done}) {
+  editTodoDone({ dispatch, commit }, {item, done}) {
     return Vue.axios.post(`/api/todo/${item.id}`, {title: item.title, done: done}).then(() => {
-      commit("EDIT_DONE", {item, done});
+      commit("EDIT_TODO_DONE", {item, done});
     }).catch(() => {
       dispatch("failMessageSnackbar", "editDoneFailMsg");
     });
@@ -67,7 +66,7 @@ const actions = {
 };
 
 const getters = {
-  items: state => {
+  todoItems: state => {
     return state.items;
   },
 };

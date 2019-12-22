@@ -15,9 +15,15 @@ services:
     environment:
       DATABASE_TYPE: "postgres"
       POSTGRES_URL: "jdbc:postgresql://postgres:5432/postgres?user=postgres&password=postgres"
-      MODULES_ENABLED: "basic"
+      MODULES_ENABLED: "basic,github"
       JWT_SECRET: "secret"
       TRACER_CLIENT: "off"
+      CALLBACK_SUCCESS: "https://lvh.me:9443/register/callback?token=<<TOKEN>>&refreshToken=<<REFRESH_TOKEN>>"
+      CALLBACK_FAILURE: "https://lvh.me:9443/register/callback?error=<<ERROR>>"
+      ROOT_URL: "https://tutelar.lvh.me:9443"
+      GITHUB_CLIENT_ID: "TODO: paste this"
+      GITHUB_CLIENT_SECRET: "TODO: paste this"
+      PASSWORD_PATTERN: ".*"
     depends_on:
       - postgres
   postgres:

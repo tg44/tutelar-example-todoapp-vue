@@ -4,26 +4,20 @@
 
     <v-app-bar
       class="px-0 elevation-1"
-      flat
       app
       clipped-left
       extended
       extension-height="7"
     >
-      <router-link class="router__toolbar__title" to="/">
-        <v-toolbar-title class="grey--text">
-          <span class="font-weight-light">Tutelar Example</span>
-        </v-toolbar-title>
-      </router-link>
+      <v-btn to="/" text>
+        Tutelar Example
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn icon @click="logOut" v-if="isAuthenticated">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
       <v-btn icon @click="logIn" v-if="!isAuthenticated">
         <v-icon>mdi-login</v-icon>
-      </v-btn>
-      <v-btn icon @click="signUp" v-if="!isAuthenticated">
-        <v-icon>mdi-account-plus-outline</v-icon>
       </v-btn>
       <span class="font-weight-light hidden-sm-and-down">
         {{ currentTime }}
@@ -47,7 +41,7 @@
         :timeout="timeout"
       >
         {{ text }}
-        <v-btn color="pink" flat @click="closeSnackBar">Close</v-btn>
+        <v-btn color="pink" @click="closeSnackBar">Close</v-btn>
       </v-snackbar>
     </v-app-bar>
   </nav>

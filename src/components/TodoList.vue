@@ -19,7 +19,7 @@
 
     <v-list>
       <v-list-item
-        v-for="item in items"
+        v-for="item in todoItems"
         :key="item.id"
       >
         <v-list-item-avatar>
@@ -107,15 +107,15 @@
       }
     },
     computed: {
-      ...mapGetters(["items"])
+      ...mapGetters(["todoItems"])
     },
     created() {
-      this.$store.dispatch("load")
+      this.$store.dispatch("loadTodoList")
     },
     methods: {
       add() {
         this.$store
-          .dispatch("addNewItem", {title: this.title, done: false})
+          .dispatch("addTodoItem", {title: this.title, done: false})
           .then(() => {
             this.title = "";
             this.injectDialog = false;
@@ -125,7 +125,7 @@
       },
       editCheck(item, done) {
         this.$store
-          .dispatch("editDone", {item: item, done: done})
+          .dispatch("editTodoDone", {item: item, done: done})
           .catch(err => {
             this.$store.dispatch("onError", err); // error handling done in store
           });
@@ -143,7 +143,7 @@
       },
       edit() {
         this.$store
-          .dispatch("editTitle", {item: this.editItem, title: this.title})
+          .dispatch("editTodoTitle", {item: this.editItem, title: this.title})
           .then(() => {
             this.editItem = null;
             this.title = "";
@@ -154,7 +154,7 @@
       },
       onDelete(item) {
         this.$store
-          .dispatch("remove", item)
+          .dispatch("removeTodoItem", item)
           .catch(err => {
             this.$store.dispatch("onError", err); // error handling done in store
           });

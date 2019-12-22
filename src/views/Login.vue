@@ -1,16 +1,16 @@
 <template>
   <div class="login">
-    <BasicUP/>
+    <LoginSelector/>
   </div>
 </template>
 
 <script>
-  import BasicUP from '@/components/logins/BasicUP.vue'
+  import LoginSelector from '@/components/Login.vue'
 
   export default {
     name: 'login',
     components: {
-      BasicUP
+      LoginSelector
     }
   }
 </script>
